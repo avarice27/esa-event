@@ -2,16 +2,7 @@
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/build",
   "installCommand": "echo 'Skip root install'",
-  "functions": {
-    "server/index.js": {
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/index.js"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
