@@ -1,0 +1,25 @@
+{
+  "name": "esaevent",
+  "version": "1.0.0",
+  "description": "Event Organizer Financial Management System",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && CI=false npm run build",
+    "install": "cd client && npm install && cd ../server && npm install"
+  },
+  "keywords": [
+    "event-management",
+    "financial-tracking",
+    "react",
+    "nodejs",
+    "postgresql"
+  ],
+  "author": "EsaEvent Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
