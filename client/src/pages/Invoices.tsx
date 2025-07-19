@@ -10,12 +10,11 @@ interface Invoice {
   client_name: string;
   issue_date: string;
   due_date: string;
-  subtotal: number;
+  amount: number;
   tax_amount: number;
   total_amount: number;
-  paid_amount: number;
   status: string;
-  notes: string;
+  paid_date?: string;
 }
 
 export default function Invoices() {
@@ -37,18 +36,14 @@ export default function Invoices() {
 
   const fetchInvoices = useCallback(async () => {
     try {
-      const params = new URLSearchParams();
-      if (filter.status) params.append('status', filter.status);
-      if (filter.client_id) params.append('client_id', filter.client_id);
-
-      const response = await axios.get(`/api/invoices?${params}`);
+      const response = await axios.get('/api/invoices');
       setInvoices(response.data);
     } catch (error) {
       toast.error('Gagal memuat data invoices');
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, []);
 
   useEffect(() => {
     fetchInvoices();
@@ -85,9 +80,9 @@ export default function Invoices() {
       client_id: '',
       issue_date: invoice.issue_date.split('T')[0],
       due_date: invoice.due_date.split('T')[0],
-      subtotal: invoice.subtotal,
+      subtotal: invoice.amount,
       tax_amount: invoice.tax_amount,
-      notes: invoice.notes,
+      notes: '',
       items: [{ description: '', quantity: 1, unit_price: 0 }]
     });
     setShowModal(true);
@@ -251,7 +246,7 @@ export default function Invoices() {
                     Rp {invoice.total_amount.toLocaleString('id-ID')}
                   </td>
                   <td className="font-medium text-green-600">
-                    Rp {invoice.paid_amount.toLocaleString('id-ID')}
+                    Rp {(invoice.status === 'paid' ? invoice.total_amount : 0).toLocaleString('id-ID')}
                   </td>
                   <td>
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(invoice.status)}`}>

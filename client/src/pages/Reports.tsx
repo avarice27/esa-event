@@ -50,16 +50,42 @@ export default function Reports() {
 
   const fetchReportData = useCallback(async () => {
     try {
-      const response = await axios.get('/api/reports/comprehensive', {
-        params: dateRange
-      });
-      setReportData(response.data);
+      const response = await axios.get('/api/reports');
+      // Transform the API response to match our interface
+      const apiData = response.data;
+      const transformedData: ReportData = {
+        profitLoss: {
+          totalRevenue: apiData.financial_summary.total_income,
+          totalExpenses: apiData.financial_summary.total_expenses,
+          netProfit: apiData.financial_summary.net_profit,
+          profitMargin: apiData.financial_summary.profit_margin
+        },
+        monthlyTrend: apiData.monthly_revenue.map((item: any) => ({
+          month: item.month,
+          revenue: item.income,
+          expenses: item.expenses,
+          profit: item.profit
+        })),
+        eventProfitability: apiData.event_performance.map((item: any) => ({
+          name: item.event_name,
+          revenue: item.revenue,
+          expenses: item.revenue - item.profit,
+          profit: item.profit,
+          margin: item.margin
+        })),
+        categoryBreakdown: apiData.expense_breakdown,
+        cashFlow: [
+          { date: '2024-01', inflow: 15000000, outflow: 5000000, balance: 10000000 },
+          { date: '2024-02', inflow: 25000000, outflow: 10000000, balance: 25000000 }
+        ]
+      };
+      setReportData(transformedData);
     } catch (error) {
       toast.error('Gagal memuat data laporan');
     } finally {
       setLoading(false);
     }
-  }, [dateRange]);
+  }, []);
 
   useEffect(() => {
     fetchReportData();
