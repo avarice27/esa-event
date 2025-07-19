@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -30,16 +30,16 @@ export default async function handler(req, res) {
       `;
       const result = await client.query(query);
       res.status(200).json(result.rows);
-    } 
+    }
     else if (req.method === 'POST') {
       const { name, company, email, phone, address, credit_limit, payment_terms, active } = req.body;
-      
+
       const insertQuery = `
         INSERT INTO clients (name, company, email, phone, address, credit_limit, credit_terms, is_active)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *
       `;
-      
+
       const values = [
         name,
         company || '',
@@ -50,12 +50,12 @@ export default async function handler(req, res) {
         parseInt(payment_terms) || 30,
         active !== false
       ];
-      
+
       const result = await client.query(insertQuery, values);
       const newClient = result.rows[0];
-      
-      res.status(201).json({ 
-        message: 'Client berhasil ditambahkan', 
+
+      res.status(201).json({
+        message: 'Client berhasil ditambahkan',
         client: {
           ...newClient,
           payment_terms: newClient.credit_terms,
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
     }
     else if (req.method === 'PUT') {
       const { id, name, company, email, phone, address, credit_limit, payment_terms, active } = req.body;
-      
+
       const updateQuery = `
         UPDATE clients 
         SET name = $1, company = $2, email = $3, phone = $4, address = $5, 
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
         WHERE id = $9
         RETURNING *
       `;
-      
+
       const values = [
         name,
         company || '',
@@ -85,16 +85,16 @@ export default async function handler(req, res) {
         active !== false,
         parseInt(id)
       ];
-      
+
       const result = await client.query(updateQuery, values);
-      
+
       if (result.rows.length === 0) {
         return res.status(404).json({ message: 'Client tidak ditemukan' });
       }
-      
+
       const updatedClient = result.rows[0];
-      res.status(200).json({ 
-        message: 'Client berhasil diupdate', 
+      res.status(200).json({
+        message: 'Client berhasil diupdate',
         client: {
           ...updatedClient,
           payment_terms: updatedClient.credit_terms,
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
     }
     else if (req.method === 'DELETE') {
       const { id } = req.query;
-      
+
       // Soft delete - set is_active to false
       const deleteQuery = `
         UPDATE clients 
@@ -112,13 +112,13 @@ export default async function handler(req, res) {
         WHERE id = $1
         RETURNING id
       `;
-      
+
       const result = await client.query(deleteQuery, [parseInt(id)]);
-      
+
       if (result.rows.length === 0) {
         return res.status(404).json({ message: 'Client tidak ditemukan' });
       }
-      
+
       res.status(200).json({ message: 'Client berhasil dihapus' });
     }
     else {
