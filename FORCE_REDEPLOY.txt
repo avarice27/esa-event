@@ -1,1 +1,1 @@
-This file forces Vercel to redeploy with latest changes - 2025-01-19
+Force redeploy after adding DATABASE_URL - 2025-01-19 - Fix event creation
