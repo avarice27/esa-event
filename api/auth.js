@@ -8,6 +8,24 @@ const users = [
     username: 'admin',
     email: 'admin@esaevent.com',
     password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // password
+  },
+  {
+    id: 2,
+    username: 'manager',
+    email: 'manager@esaevent.com',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // password
+  },
+  {
+    id: 3,
+    username: 'staff',
+    email: 'staff@esaevent.com',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // password
+  },
+  {
+    id: 4,
+    username: 'demo',
+    email: 'demo@esaevent.com',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // password
   }
 ];
 
