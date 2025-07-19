@@ -57,12 +57,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (username: string, password: string) => {
-    const response = await axios.post('/api/auth', { email: username, password });
-    const { token, user } = response.data;
-    
-    localStorage.setItem('token', token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(user);
+    // Try simple auth first, fallback to regular auth
+    try {
+      const response = await axios.post('/api/simple-auth', { email: username, password });
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser(user);
+    } catch (error) {
+      // Fallback to regular auth
+      const response = await axios.post('/api/auth', { email: username, password });
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser(user);
+    }
   };
 
   const logout = () => {
